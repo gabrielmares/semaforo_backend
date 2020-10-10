@@ -12,6 +12,8 @@ query.COLRESIDENCIA = 'select NOMBRE as PobResidencia from cntry_estrucpolitica 
 query.POBRESIDENCIA = 'select NOMBRE as ColResidencia from cntry_estrucpolitica where ESTADO=? AND MUNICIPIO =? AND POBLACION =? and COLONIA=0';
 query.NACESTADO = 'select NOMBRE as EdoNacimiento from cntry_estrucpolitica where ESTADO=? and municipio=0 and poblacion=0 and colonia=0';
 query.FAMILIAR = 'select NOMBRE as CONTACTO from direc_directorio where EMPRESA =?';
+query.ACTIVIDAD = 'select NOMBRE as ACTIVIDAD from CLIAC_ACTIVIDADES where CODIGO=?';
+query.ULTIMOCREDITO = "select mov.FACTURA as Contrato from CCMOV_MOVIMIENTOS mov where mov.CLIENTE=432 and mov.TIPO=101 and mov.IMPORTE>20 order by mov.FECVTO desc rows 1"
 
 
 router.get('/listas', (req, res) => {
@@ -222,13 +224,17 @@ router.get('/basic', async (req, res) => {
     try {
         cliente.generales = await promesa(query.GENERALES, [CODIGO]);// obtenemos los generales del cliente, pasando solo el codigo como parametro
         cliente.familiar = await promesa(query.FAMILIAR, [CODIGO]); // obtenemos el familiar del cliente de la BD
-        const { municipio, estado, colonia, poblacion, nacestado } = cliente.generales 
+        const { municipio, estado, colonia, poblacion, nacestado, actividad } = cliente.generales 
         // el resto de valores no se pueden traer en un solo query con joins, se queda colgada la consulta entre joins
         cliente.edoResidencia = await promesa(query.EDORESIDENCIA, [estado]); 
         cliente.munResidencia = await promesa(query.MUNRESIDENCIA, [estado, municipio]);
         cliente.pobResidencia = await promesa(query.POBRESIDENCIA, [estado, municipio, poblacion]);
         cliente.ColResidencia = await promesa(query.COLRESIDENCIA, [estado, municipio, poblacion, colonia]);
-        cliente.nacestado = await promesa(query.NACESTADO, [nacestado])
+        cliente.nacestado = await promesa(query.NACESTADO, [nacestado]);
+        // ACTIVIDAD A LA QUE SE DEDICA EL CLIENTE
+        cliente.actividad = await promesa(query.ACTIVIDAD, [actividad]);
+        // ULTIMO CREDITO QUE SE LE ENTREGO AL CLIENTE
+        cliente.credito = await promesa(query.ULTIMOCREDITO, [CODIGO]);
 
     } catch (error) {
         console.log(error)

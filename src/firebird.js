@@ -15,7 +15,7 @@ options.pageSize = 4096;
 
 let pool = Firebird.pool(15, options);
 
-module.exports = pool;
+module.exports = pool; 
 
 /*
 

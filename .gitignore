@@ -1,2 +1,5 @@
 .env
 /node_modules
+src/mysql.js
+src/firebird.js
+src/firebird.js

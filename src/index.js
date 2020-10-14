@@ -8,7 +8,7 @@ const passport = require('passport');
 
 require('./helpers/passport');
 
-console.log(process.env.DBMYSQL)
+
 
 app.use(passport.initialize());
 const port = process.env.PORT || 81;

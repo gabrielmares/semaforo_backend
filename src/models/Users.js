@@ -2,7 +2,8 @@ const passport = require('passport');
 const { Sequelize, DataTypes } = require('sequelize');
 const pool = require('../mysql');
 require('dotenv').config();
-console.log(process.env.DBMYSQL)
+
+
 let sequelizePool = new Sequelize(
     process.env.DBMYSQL,
     process.env.USERMYSQL,
@@ -25,6 +26,7 @@ const User = sequelizePool.define('user', {
     },
     email: {
         type: DataTypes.STRING,
+        unique:true,
         allowNull: false
     },
     role: {
@@ -43,7 +45,7 @@ try {
 } catch (error) {
     console.log(error)
 }
-console.log('Tabla Usuarios modificada')
+// console.log('Tabla Usuarios modificada')
 
 
 module.exports = User;

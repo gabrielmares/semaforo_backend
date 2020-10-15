@@ -1,21 +1,12 @@
-// const models = require('../models');
-
 let router = require('express').Router();
-// let poolMysql = require('../mysql').pool;
-let passport = require('passport');
-const jwt = require('jsonwebtoken');
-let signUp = require('../controllers');
+let { signup, signin } = require('../controllers');
 
 
 
-router.post('/signup', (req, res, next) => {
-    signUp(req, res, next)
-})
+router.post('/signup', signup)
 
-router.post('/signin', (req, res) => {
+router.post('/signin', signin)
 
-    res.sendStatus(200)
-})
 
 
 module.exports = router;

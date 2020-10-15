@@ -61,7 +61,7 @@ router.get('/listas', (req, res) => {
         order by c.FINNOSUCURSAL, c.FINCENTRO, c.FINGRUPO, f.cliente ) sal on (sal.codigo = c.CODIGO and sal.factura=a.nocontrato)
         where a.STATUS = 2 and s.FECVTO>=${from} and s.FECVTO <=${to} order by su.NOMBRE, a.CENTRO, s.FECVTO `, function (err, rows) {
                 if (err) {
-                    return err;
+                    throw err;
                 }
                 db.detach();
                 console.log('retornando query al cliente')

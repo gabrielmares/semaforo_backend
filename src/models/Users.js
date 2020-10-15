@@ -22,7 +22,7 @@ const User = sequelizePool.define('user', {
     },
     nombre: {
         type: DataTypes.STRING,
-        allowNull: process.env.ALLOWNULL
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING,
@@ -41,11 +41,10 @@ const User = sequelizePool.define('user', {
 
 try {
     User.sync({ alter: true });
-
 } catch (error) {
     console.log(error)
 }
-// console.log('Tabla Usuarios modificada')
+console.log('Tabla Usuarios modificada')
 
 
 module.exports = User;

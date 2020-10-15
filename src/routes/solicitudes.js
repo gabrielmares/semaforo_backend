@@ -18,7 +18,7 @@ query.ASESOR = 'select NOMBRE from direc_directorio where CODIGO=?'
 
 router.get('/listas', (req, res) => {
     // const { filter } =
-    const { sucursal, from, to, lastCredit } = req.query;
+    const { sucursal, from, to, lastCredit, centro } = req.query;
     console.log(req.query)
     // console.table(sucursal, from, to, lastCredit);
     if (!sucursal) return res.send(false)
@@ -30,7 +30,7 @@ router.get('/listas', (req, res) => {
         // llamada a la bd, obtiene la lista de creditos a vencer en los futuros 15 dias
         try {
             db.query(`SELECT su.NOMBRE as Sucursal, C.CODIGO,  c.NOMBRE as Cliente, a.CENTRO, a.GRUPO, a.NOCONTRATO as Contrato, a.MONTOSOL as Credito, s.FECVTO as Vencimiento, sal.saldo, sal.sdocapital, sal.ultimo, ((a.MONTOSOL - sal.sdocapital)/(a.MONTOSOL))*100 as PorcPagado 
-            FROM FSOCR_SOLICITUDES a  join CCSDO_SALDOS s on a.NOCONTRATO=s.FACTURA and a.NOPAGOS=s.PLAZO and a.STATUS=2 
+            FROM FSOCR_SOLICITUDES a  join CCSDO_SALDOS s on a.NOCONTRATO=s.FACTURA and a.NOPAGOS=s.PLAZO and a.STATUS=2 and a.CENTRO=${centro}
             join SUCUR_SUCURSALES su
             on a.NOSUCURSAL=su.CODIGO 
             join CLIEN_CLIENTES c on 
@@ -48,7 +48,7 @@ router.get('/listas', (req, res) => {
             left outer join CCCON_CONCEPTOS co 
             on(co.CODIGO = m.TIPO) 
             join FSOCR_SOLICITUDES ant on (ant.NOCONTRATO=m.FACTURA and ant.SOLFECHA<${lastCredit})
-            where m.fecha<=${to} and m.FACTURA <> 'FONGAR'  
+            where m.FECHA between 20180101 and ${to} and m.FACTURA <> 'FONGAR'  
             group by m.CLIENTE, m.FACTURA)    f 
             left outer join FSOCR_SOLICITUDES sol 
             on(f.cliente = sol.CLIENTE and f.FACTURA = sol.NOCONTRATO) 

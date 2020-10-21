@@ -5,11 +5,13 @@ const requestCredits = require('./routes/solicitudes');
 const cors = require('cors');
 const models = require('./models');
 const passport = require('passport');
+const update = require('./helpers/cronjobs');
+
 
 require('./helpers/passport');
 
 
-
+// app.use(cron());
 app.use(passport.initialize());
 const port = process.env.PORT || 81;
 app.set('port', process.env.PORT || port);

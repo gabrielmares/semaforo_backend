@@ -3,7 +3,7 @@ let job = require('node-schedule');
 let { Inputdate } = require('../helpers/fechas');
 const { requestsToRenovate } = require('../models');
 // const firebirdPool = require('../firebird');
-const { promesa2 } = require('../querys');
+const { promesa } = require('../querys');
 const { Op } = require('sequelize')
 
 let find = `SELECT su.NOMBRE as Sucursal, c.FINNOSUCURSAL, C.CODIGO,  c.NOMBRE, a.CENTRO, a.GRUPO, a.NOCONTRATO as Contrato, a.MONTOSOL as Credito, s.FECVTO as Vencimiento, sal.saldo, sal.sdocapital, sal.ultimo, ((a.MONTOSOL - sal.sdocapital)/(a.MONTOSOL))*100 as PorcPagado
@@ -83,9 +83,9 @@ async function merge(requestsToRenovate, row) {
 
 
 // CRON JOB PARA ACTUALIZAR INFORMACION EN LA BD DE MYSQL CON LA INFORMACION DE FIREBIRD
-let update = job.scheduleJob({ hour: 08, minute: 57 },
+let update = job.scheduleJob({ hour: 09, minute: 11 },
     async () => {
-        let queryFB = await promesa2(find);
+        let queryFB = await promesa(find);
         let rowToMysql = queryFB.map(row => {
             return merge(requestsToRenovate, row)
         })

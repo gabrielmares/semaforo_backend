@@ -1,9 +1,10 @@
-let User = require('../models').UserModel;
+let User = require('../../models').UserModel;
 let bcrypt = require('bcryptjs');
+let uuid = require('uuid')
 
 
 let signup = async (req, res) => {
-    const { password, email, nombre, role } = req.body;
+    const { password, email, nombre, rol, sucursal } = req.body;
     try {
         let userInfo = await User.findOne({
             where: {
@@ -15,18 +16,22 @@ let signup = async (req, res) => {
                 console.log(user)
                 throw 604
             }
-            let newUser = await User.create({
+            return await User.create({
                 email,
                 password: await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS)),
-                role: parseInt(role),
-                nombre
+                rol: parseInt(rol),
+                nombre,
+                sucursal,
+                identificador: uuid.v4()
             })
-            return newUser;
         })
         return res.send(userInfo.email);
     } catch (error) {
         console.error('error: ', error)
-        return res.send(error)
+        return res.send({
+            error,
+            msg: 'Ya existe un usuario con este Email'
+        })
     }
 }
 

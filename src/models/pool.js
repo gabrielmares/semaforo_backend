@@ -9,7 +9,7 @@ let sequelizePool = new Sequelize(
     process.env.PASSWORDMYSQL, {
     dialect: "mysql",
     port: process.env.PORTMYSQL,
-    host: process.env.HOSTMYSQL
+    host: process.env.HOSTMYSQL,
 });
 
 

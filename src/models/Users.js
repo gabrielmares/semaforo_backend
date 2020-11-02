@@ -1,10 +1,11 @@
 const { DataTypes } = require('sequelize');
+const rolUsers = require('./roles');
 require('dotenv').config();
 
 const sequelizePool = require('./pool');
 
 
-const User = sequelizePool.define('user', {
+const UserModel = sequelizePool.define('user', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -19,18 +20,36 @@ const User = sequelizePool.define('user', {
         unique: true,
         allowNull: false
     },
-    role: {
+    rol: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: rolUsers,
+            key: 'id'
+        }
+    },
+    sucursal: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    identificador: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        unique: true
     }
+}, {
+    timestamps: false
 });
 
+// UserModel.hasOne(rolUsers)
+
+
 // try {
-//     User.sync({ alter: true });
+//     UserModel.sync({ alter: true, force: true });
 //     console.log('Tabla Usuarios modificada')
 // } catch (error) {
 //     console.log(error)
@@ -38,4 +57,4 @@ const User = sequelizePool.define('user', {
 
 
 
-module.exports = User;
+module.exports = UserModel;

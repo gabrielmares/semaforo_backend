@@ -12,7 +12,7 @@ const requestsToRenovate = sequelizePool.define('request', {
     },
     NOMBRE: {
         type: DataTypes.STRING,
-        allowNull:false
+        allowNull: false
     },
     CENTRO: {
         type: DataTypes.INTEGER,
@@ -44,10 +44,12 @@ const requestsToRenovate = sequelizePool.define('request', {
         allowNull: false
     },
     PORPAGADO: DataTypes.FLOAT
+}, {
+    timestamps: false
 });
 
 // try {
-//     requestsToRenovate.sync({ alter: true, force:true })
+//     requestsToRenovate.sync({ alter: true })
 //     console.log('Tabla solicitudes modificada')
 // } catch (error) {
 //     console.log(error);

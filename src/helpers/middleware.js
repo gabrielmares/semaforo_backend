@@ -2,7 +2,6 @@ require('dotenv').config();
 let jwt = require('jsonwebtoken');
 
 let middleware = (req, res, next) => {
-    console.log(req.signedCookies.TokenID)
     try {
         if (req.signedCookies.TokenID) {
             let token = req.signedCookies.TokenID

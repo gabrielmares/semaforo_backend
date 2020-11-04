@@ -1,8 +1,10 @@
 let requestToRenovate = require('../../models').requestsToRenovate;
 
-const Totales = async (req, res) => {
+const Totales = (req, res) => {
+    console.log(req.query)
     if ((parseInt(req.query.sucursal)) > 0) {
-        await requestToRenovate.findAll({
+        console.log('filtrando por sucursal')
+        return requestToRenovate.findAll({
             where: {
                 FINNOSUCURSAL: parseInt(req.query.sucursal)
             }
@@ -10,8 +12,16 @@ const Totales = async (req, res) => {
             return res.send(query)
         })
 
+    } else {
+        console.log('filtrando sin sucursal')
+        return requestToRenovate
+            .findAll()
+            .then(query => { return res.json(query) })
+            .catch(err => {
+                console.log(err)
+                return res.sendStatus(607)
+            })
     }
-    await requestToRenovate.findAll().then(query => (res.send(query)))
 }
 
 module.exports = Totales;

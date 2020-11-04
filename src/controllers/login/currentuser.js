@@ -29,7 +29,7 @@ let currentUser = (req, res) => {
                     codigo: 403,
                     msg: 'Vuelva a iniciar sesion'
                 })
-                const { nombre, email, rol, sucursal } = user.dataValues;
+                const { nombre, email, rol, sucursal, status } = user.dataValues;
 
                 return res.json({
                     info: true,
@@ -37,7 +37,8 @@ let currentUser = (req, res) => {
                         nombre,
                         email,
                         rol,
-                        sucursal
+                        sucursal,
+                        status
                     }
                 });
 

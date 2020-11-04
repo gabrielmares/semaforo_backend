@@ -1,6 +1,7 @@
 let router = require('express').Router();
-let { signup, signin, usersList, currentUser, logOut } = require('../controllers/login');
+let { signup, signin, usersList, currentUser, logOut, deleteUser, updateUser, blockUser } = require('../controllers/login');
 const middleware = require('../helpers/middleware')
+const isAdmin = require('../helpers/adminRequest')
 
 
 // endpoint de registro de usuarios
@@ -19,6 +20,16 @@ router.get('/logout', logOut)
 
 // lista de usuarios activos en el sistema
 router.get('/userslist', middleware, usersList)
+
+
+// actualizacion de usuarios en BD
+router.put('/update', isAdmin, updateUser);
+
+// bloqueo de cuentas de usuarios en BD
+router.put('/denied', isAdmin, blockUser);
+
+router.delete('/delete', isAdmin, deleteUser);
+
 
 
 module.exports = router;

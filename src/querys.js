@@ -13,6 +13,9 @@ function promesa(query, values) {
                         reject(err)
                     }
                     db.detach();
+                    if (row.length > 1) {
+                        resolve(row);
+                    }
                     resolve(row[0]);
                 })
             })
@@ -25,6 +28,9 @@ function promesa(query, values) {
 }
 
 
-module.exports.promesa = promesa;
+
+module.exports = {
+    promesa
+}
 
 

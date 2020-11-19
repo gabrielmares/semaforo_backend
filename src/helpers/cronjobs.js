@@ -89,19 +89,19 @@ async function merge(requestsToRenovate, row) {
 
 
 // CRON JOB PARA ACTUALIZAR INFORMACION EN LA BD DE MYSQL CON LA INFORMACION DE FIREBIRD
-let update = job.scheduleJob({ hour: 12, minute: 50 }, // hora de ejecucion del proceso
-    async () => {
-        let queryFB = await promesa(
+let update = job.scheduleJob({ hour: 09, minute: 15 }, // hora de ejecucion del proceso
+    () => {
+        promesa(
             find(
                 CambiarFecha(Date.now()),
                 CambiarFecha(sumaFechas(new Date(), -15)),
                 CambiarFecha(sumaFechas(new Date(), 15))
-            ));
-
-        console.log(queryFB)
-        let rowToMysql = queryFB.map(row => {
-            return merge(requestsToRenovate, row)
-        })
+            )).then(rows => {
+                console.log('numero registros encontrados', rows.length)
+                rows.map(row => {
+                    return merge(requestsToRenovate, row)
+                })
+            })
     }
 );
 

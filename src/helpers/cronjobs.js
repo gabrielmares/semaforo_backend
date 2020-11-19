@@ -1,13 +1,16 @@
-let cron = require('cron').CronJob;
 let job = require('node-schedule');
 let { Inputdate } = require('../helpers/fechas');
 const { requestsToRenovate } = require('../models');
 // const firebirdPool = require('../firebird');
 const { promesa } = require('../querys');
 const { Op } = require('sequelize')
+const { CambiarFecha, sumaFechas } = require('../helpers/fechas');
 
-let find = `SELECT su.NOMBRE as Sucursal, c.FINNOSUCURSAL, C.CODIGO,  c.NOMBRE, a.CENTRO, a.GRUPO, a.NOCONTRATO as Contrato, a.MONTOSOL as Credito, s.FECVTO as Vencimiento, sal.saldo, sal.sdocapital, sal.ultimo, ((a.MONTOSOL - sal.sdocapital)/(a.MONTOSOL))*100 as PorcPagado
-FROM FSOCR_SOLICITUDES a  join CCSDO_SALDOS s on a.NOCONTRATO=s.FACTURA and a.NOPAGOS=s.PLAZO and a.STATUS=2
+
+// query a ejecutar en Firebird para importar datos a Mysql
+let find = (hoy, ultimo, hasta) => {
+    return `SELECT su.NOMBRE as Sucursal, c.FINNOSUCURSAL, C.CODIGO,  c.NOMBRE, a.CENTRO, a.GRUPO, a.NOCONTRATO as Contrato, a.MONTOSOL as Credito, s.FECVTO as Vencimiento, sal.saldo, sal.sdocapital, sal.ultimo, ((a.MONTOSOL - sal.sdocapital)/(a.MONTOSOL))*100 as PorcPagado
+FROM FSOCR_SOLICITUDES a  join CCSDO_SALDOS s on a.NOCONTRATO=s.FACTURA and a.NOPAGOS=s.PLAZO and a.STATUS=2 and (a.MORA is null)
 join SUCUR_SUCURSALES su
 on a.NOSUCURSAL=su.CODIGO
 join CLIEN_CLIENTES c on
@@ -24,8 +27,8 @@ sum(case when co.CARGOABONO = 'A' then m.mnimporte * (-1) else m.mnimporte end) 
 from CCMOV_MOVIMIENTOS m
 left outer join CCCON_CONCEPTOS co
 on(co.CODIGO = m.TIPO)
-join FSOCR_SOLICITUDES ant on (ant.NOCONTRATO=m.FACTURA ) 
-where m.FECHA<=20201001 and m.FACTURA <> 'FONGAR' -- and m.cliente=201910368
+join FSOCR_SOLICITUDES ant on (ant.NOCONTRATO=m.FACTURA and ant.SOLFECHA<${ultimo} ) 
+where m.FECHA<=${hoy} and m.FACTURA <> 'FONGAR' 
 group by m.CLIENTE, m.FACTURA)    f
 left outer join FSOCR_SOLICITUDES sol
 on(f.cliente = sol.CLIENTE and f.FACTURA = sol.NOCONTRATO)
@@ -34,11 +37,14 @@ on(f.cliente = c.CODIGO)
 left outer join SUCUR_SUCURSALES s on(c.FINNOSUCURSAL = s.CODIGO)
 left outer join FCENT_CENTROS ce on(c.FINCENTRO = ce.CENTRO and c.FINNOSUCURSAL = ce.NOSUCURSAL)
 join (select m.CLIENTE, m.FACTURA, max(m.FECHA) as ultimo from CCMOV_MOVIMIENTOS m where m.TIPO=101 group by m.CLIENTE, m.FACTURA) ult
-on (c.CODIGO=ult.cliente and f.factura=ult.factura) where(f.importe < -0.01 or f.importe > 0.01)
-order by c.FINNOSUCURSAL, c.FINCENTRO, c.FINGRUPO, f.cliente ) sal on (sal.codigo = c.CODIGO and sal.factura=a.nocontrato)
-where a.STATUS = 2 and s.FECVTO <=20201001 order by su.NOMBRE, a.CENTRO, s.FECVTO`;
+on (c.CODIGO=ult.cliente and f.factura=ult.factura)
+where (f.importe < -0.01 or f.importe > 0.01) and sol.SOLFECHA<${ultimo}
+order by c.FINNOSUCURSAL, c.FINCENTRO, c.FINGRUPO, f.cliente ) sal 
+on (sal.codigo = c.CODIGO and sal.factura=a.nocontrato)
+where a.STATUS = 2 and s.FECVTO >=${hoy} and s.FECVTO <= ${hasta}
+order by su.NOMBRE, a.CENTRO, s.FECVTO`
+};
 
-const q = 'select CODIGO from clien_clientes rows 1 '
 
 async function merge(requestsToRenovate, row) {
 
@@ -83,9 +89,16 @@ async function merge(requestsToRenovate, row) {
 
 
 // CRON JOB PARA ACTUALIZAR INFORMACION EN LA BD DE MYSQL CON LA INFORMACION DE FIREBIRD
-let update = job.scheduleJob({ hour: 09, minute: 11 },
+let update = job.scheduleJob({ hour: 12, minute: 50 }, // hora de ejecucion del proceso
     async () => {
-        let queryFB = await promesa(find);
+        let queryFB = await promesa(
+            find(
+                CambiarFecha(Date.now()),
+                CambiarFecha(sumaFechas(new Date(), -15)),
+                CambiarFecha(sumaFechas(new Date(), 15))
+            ));
+
+        console.log(queryFB)
         let rowToMysql = queryFB.map(row => {
             return merge(requestsToRenovate, row)
         })

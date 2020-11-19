@@ -40,10 +40,15 @@ function Inputdate(fecnac) {
     return FecNacioParse;
 }
 
+function sumaFechas(fecha, dias) {
+    fecha.setDate(fecha.getUTCDate() + dias)
+    return fecha
+}
 
 
 
 module.exports = {
+    sumaFechas,
     Inputdate,
     ParseDate,
     CambiarFecha

@@ -1,7 +1,6 @@
 let requestToRenovate = require('../../models').requestsToRenovate;
 
 const Totales = (req, res) => {
-    console.log(req.query)
     if ((parseInt(req.query.sucursal)) > 0) {
         console.log('filtrando por sucursal')
         return requestToRenovate.findAll({

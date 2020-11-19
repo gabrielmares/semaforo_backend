@@ -3,7 +3,6 @@ const { Op } = require('sequelize');
 
 const list = async (req, res) => {
     let { CENTRO, FINNOSUCURSAL, DESDE, HASTA } = req.query;
-    console.log(req.query)
     let rows = {};
     if (parseInt(CENTRO) > 0) {
         try {
@@ -34,7 +33,9 @@ const list = async (req, res) => {
         rows = await requestsToRenovate
             .findAll({
                 where: {
-                    FINNOSUCURSAL: parseInt(FINNOSUCURSAL),
+                    FINNOSUCURSAL: {
+                        [Op.gt]: [parseInt(FINNOSUCURSAL)]
+                    },
                     VENCIMIENTO: {
                         [Op.between]: [DESDE, HASTA]
 

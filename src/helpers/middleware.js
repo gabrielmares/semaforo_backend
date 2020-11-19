@@ -11,6 +11,9 @@ let middleware = (req, res, next) => {
                 }
                 return next();
             })
+        } else {
+            console.log('sin token')
+            throw 403
         }
         
     } catch (error) {

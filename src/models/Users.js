@@ -40,12 +40,16 @@ const UserModel = sequelizePool.define('user', {
         type: DataTypes.UUID,
         allowNull: false,
         unique: true
+    },
+    status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 }, {
     timestamps: false
 });
 
-// UserModel.hasOne(rolUsers)
 
 
 // try {

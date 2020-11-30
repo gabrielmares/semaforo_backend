@@ -1,4 +1,4 @@
-let Totales = require('./request');
+let Totales = require('./renovations');
 let invoices = require('./invoice');
 let list = require('./listWithFilter')
 

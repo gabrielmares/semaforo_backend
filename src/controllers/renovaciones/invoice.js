@@ -1,4 +1,3 @@
-const { requestsToRenovate } = require('../../models');
 const { promesa } = require('../../querys');
 
 let query = {};

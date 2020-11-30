@@ -5,11 +5,11 @@ const requestCredits = require('./routes/solicitudes');
 const cors = require('cors');
 const models = require('./models');
 const passport = require('passport');
-const update = require('./helpers/cronjobs');
+const update = require('./cronjobs');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-
+// const generateDoc = require('./helpers/constancias');
 require('dotenv').config();
 require('./helpers/passport');
 

@@ -1,6 +1,7 @@
 var router = require('express').Router();
 const middleware = require('../helpers/middleware')
-const { Totales, invoices, list } = require('../controllers/renovaciones')
+const { Totales, invoices, list } = require('../controllers/renovaciones');
+const { RequestsInProcess } = require('../controllers/solicitudes')
 
 
 
@@ -12,5 +13,8 @@ router.get('/renovacion', middleware, invoices)
 
 // retorna el total de creditos por renovar, sin filtrar sucursales, centros ni fechas
 router.get('/totales', middleware, Totales)
+
+// solicitudes de credito ingresadas al sistema, nuevo ingreso y renovaciones, para seguimiento de documentacion
+router.get('/solicitudes', middleware, RequestsInProcess)
 
 module.exports = router;

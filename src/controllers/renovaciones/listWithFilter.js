@@ -1,4 +1,4 @@
-const { requestsToRenovate } = require('../../models');
+const { Renovations } = require('../../models');
 const { Op } = require('sequelize');
 
 const list = async (req, res) => {
@@ -7,7 +7,7 @@ const list = async (req, res) => {
     if (parseInt(CENTRO) > 0) {
         try {
             console.log('buscando por centro')
-            rows = await requestsToRenovate
+            rows = await Renovations
                 .findAll({
                     where: {
                         FINNOSUCURSAL: parseInt(FINNOSUCURSAL),
@@ -29,12 +29,14 @@ const list = async (req, res) => {
     }
 
     try {
-        console.log('buscando sin centro', DESDE, HASTA)
-        rows = await requestsToRenovate
+        console.log('buscando sin centro', DESDE, HASTA, FINNOSUCURSAL)
+        // buscando registros con la condicion minina, opcion utilizada para altos rangos de la empresa
+        rows = await Renovations
             .findAll({
                 where: {
-                    FINNOSUCURSAL: {
-                        [Op.gt]: [parseInt(FINNOSUCURSAL)]
+                    FINNOSUCURSAL: parseInt(FINNOSUCURSAL),
+                    CENTRO: {
+                        [Op.gt]: 0
                     },
                     VENCIMIENTO: {
                         [Op.between]: [DESDE, HASTA]

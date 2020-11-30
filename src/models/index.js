@@ -1,11 +1,21 @@
 const rolUsers = require('./roles');
 const UserModel = require('./Users');
-const requestsToRenovate = require('./request');
+const Renovations = require('./Renovations');
+const Sucursales = require('./Sucursales');
+const Promotores = require('./Promotores');
+const RequestsInProcess = require('./Requests');
+const FilesRequests = require('./FilesRequests');
+const Configuration = require('./ParamsConfig');
 
 
 
 module.exports = {
     rolUsers,
+    FilesRequests,
+    Promotores,
     UserModel,
-    requestsToRenovate    
+    Renovations,
+    Sucursales,
+    RequestsInProcess,
+    Configuration
 }

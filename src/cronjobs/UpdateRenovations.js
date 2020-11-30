@@ -1,6 +1,6 @@
 let job = require('node-schedule');
 let { Inputdate } = require('../helpers/fechas');
-const { requestsToRenovate } = require('../models');
+const { Renovations } = require('../models');
 // const firebirdPool = require('../firebird');
 const { promesa } = require('../querys');
 const { Op } = require('sequelize')
@@ -46,9 +46,9 @@ order by su.NOMBRE, a.CENTRO, s.FECVTO`
 };
 
 
-async function merge(requestsToRenovate, row) {
+async function merge(Renovations, row) {
 
-    await requestsToRenovate
+    await Renovations
         .findAll({
             where: {
                 CONTRATO: {
@@ -63,7 +63,7 @@ async function merge(requestsToRenovate, row) {
                     return false;
                 }
                 console.log('actualizando contrato', row.CONTRATO)
-                return await requestsToRenovate.update({
+                return await Renovations.update({
                     PorPagado: parseInt(row.PORCPAGADO),
                     SALDO: parseFloat(row.SALDO).toFixed(3),
                     SDOCAPITAL: parseFloat(row.SDOCAPITAL).toFixed(3),
@@ -76,7 +76,7 @@ async function merge(requestsToRenovate, row) {
                 })
             }
             console.log('creando registro en mysql', row.CONTRATO)
-            return await requestsToRenovate.create({
+            return await Renovations.create({
                 ...row,
                 PORPAGADO: parseFloat(row.PORCPAGADO),
                 SALDO: parseFloat(row.SALDO),
@@ -89,20 +89,17 @@ async function merge(requestsToRenovate, row) {
 
 
 // CRON JOB PARA ACTUALIZAR INFORMACION EN LA BD DE MYSQL CON LA INFORMACION DE FIREBIRD
-let update = job.scheduleJob({ hour: 09, minute: 15 }, // hora de ejecucion del proceso
-    () => {
-        promesa(
-            find(
-                CambiarFecha(Date.now()),
-                CambiarFecha(sumaFechas(new Date(), -15)),
-                CambiarFecha(sumaFechas(new Date(), 15))
-            )).then(rows => {
-                console.log('numero registros encontrados', rows.length)
-                rows.map(row => {
-                    return merge(requestsToRenovate, row)
-                })
-            })
-    }
-);
+let update = () => promesa(
+    find(
+        CambiarFecha(Date.now()),
+        CambiarFecha(sumaFechas(new Date(), -15)),
+        CambiarFecha(sumaFechas(new Date(), 15))
+    )).then(rows => {
+        console.log('numero registros encontrados', rows.length)
+        rows.map(row => {
+            return merge(Renovations, row)
+        })
+    })
+
 
 module.exports = update;

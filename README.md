@@ -39,4 +39,8 @@ Solo el administrador tiene privilegios para las siguientes acciones
 
 [Eliminar usuario](https://github.com/gabrielmares/semaforo_backend/blob/2e55a4638c0d7b6717685ed8738c3361a2c86df5/src/routes/login.js#L31)
 
+
+la aplicacion se ejecuta dentro de la intranet de la empresa, no tiene certificado SSL y su trafico a internet esta bloqueado por el Firewall.
+
+** Por seguridad de la empresa, no puedo publicar mas datos ni informacion **
 > Written with [StackEdit](https://stackedit.io/).

@@ -19,7 +19,7 @@ router.get('/currentuser', currentUser)
 router.get('/logout', logOut)
 
 // lista de usuarios activos en el sistema
-router.get('/userslist', middleware, usersList)
+router.get('/userslist', isAdmin, usersList)
 
 
 // actualizacion de usuarios en BD

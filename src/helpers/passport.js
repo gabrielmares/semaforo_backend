@@ -24,8 +24,7 @@ passport.use('signin',
                             if (!result) {
                                 return done(null, false, { message: 'Contraseña no valida' });
                             }
-                            console.log('Usuario autenticado');
-                            return done(null, user, { message: 'Bienvenido' })
+                            return done(null, user, { message: 'Bienvenido' }) //usuario autenticado
                         })
                 })
                 return data;

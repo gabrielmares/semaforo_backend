@@ -6,7 +6,7 @@ const list = async (req, res) => {
     let rows = {};
     if (parseInt(CENTRO) > 0) {
         try {
-            console.log('buscando por centro')
+            // filtra registros por centros de operacion
             rows = await Renovations
                 .findAll({
                     where: {
@@ -22,14 +22,12 @@ const list = async (req, res) => {
                 })
             return res.send(rows)
         } catch (error) {
-            console.log(error)
             return res.send(304)
 
         }
     }
 
     try {
-        console.log('buscando sin centro', DESDE, HASTA, FINNOSUCURSAL)
         // buscando registros con la condicion minina, opcion utilizada para altos rangos de la empresa
         rows = await Renovations
             .findAll({
@@ -50,7 +48,6 @@ const list = async (req, res) => {
             })
         return res.send(rows)
     } catch (error) {
-        console.log(error)
         return res.send(304)
     }
 }

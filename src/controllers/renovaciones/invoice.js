@@ -35,7 +35,6 @@ const invoice = async (req, res) => {
         cliente.vendedor = await promesa(query.ASESOR, [AGENTEVTAS]);
         return res.send(cliente)
     } catch (error) {
-        console.log(error)
         res.send(error)
     }
 

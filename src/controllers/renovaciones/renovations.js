@@ -8,7 +8,6 @@ const Totales = async (req, res) => {
     let rows = {};
     try {
         if ((parseInt(req.query.sucursal)) > 0) {
-            console.log('filtrando por sucursal')
             rows.renovations = await Renovations.findAll({
                 where: {
                     FINNOSUCURSAL: parseInt(req.query.sucursal)
@@ -20,7 +19,7 @@ const Totales = async (req, res) => {
                 }
             })
         } else {
-            console.log('filtrando sin sucursal')
+            // obtiene registros sin filtros
             rows.renovations = await Renovations.findAll();
             rows.requests = await RequestsInProcess.findAll();
         }

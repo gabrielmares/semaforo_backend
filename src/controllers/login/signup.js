@@ -13,8 +13,7 @@ let signup = async (req, res) => {
         }
         ).then(async user => {
             if (user) {
-                console.log(user)
-                throw 604
+                throw 604 //el usuario existe, sale del proceso de registro
             }
             return await User.create({
                 email,

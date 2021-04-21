@@ -7,7 +7,6 @@ let currentUser = (req, res) => {
         let token = req.signedCookies.TokenID
         jwt.verify(token, process.env.JWTSECRET, (err, info) => {
             if (err || info.exp < Date.now()) {
-                console.log('limpiando el TokenID de ', info.claims.usuario)
                 // si el token esta vencido, limpiamos Cookie de sesion para
                 // que el usuario vuelva a iniciar sesion
                 return res
@@ -47,7 +46,6 @@ let currentUser = (req, res) => {
 
     }
     else {
-        console.log('Sin token')
         return res.json({
             codigo: 403,
             msg: 'sin token'

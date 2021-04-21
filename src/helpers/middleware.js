@@ -12,12 +12,11 @@ let middleware = (req, res, next) => {
                 return next();
             })
         } else {
-            console.log('sin token')
-            throw 403
+            throw 403 // error, sin token
         }
         
     } catch (error) {
-        console.log('token expirado', error)
+        // token expirado
         return res
             .clearCookie('TokenID')
             .json({

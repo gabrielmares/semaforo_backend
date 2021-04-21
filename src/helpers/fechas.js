@@ -5,7 +5,7 @@ function ParseDate(fecnac) {
     let yearI = arr.slice(0, 4);
     let MonthI = arr.slice(4, 6);
     let dayI = arr.slice(6, 8);
-    return (dayI.join("") + "/" + MonthI.join("") + "/" + yearI.join(""))
+    return (yearI.join("") + "-" + MonthI.join("") + "-" + dayI.join(""))
 
 }
 
@@ -26,7 +26,7 @@ function CambiarFecha(FechaDeEntrada) {
         timeZone: 'UTC'
     });
     let NuevaFecha = formatter.formatToParts(FechaRegistrada);
-    let NuevaFechaParse = NuevaFecha[0].value + "" + NuevaFecha[2]["value"] + "" + NuevaFecha[4]["value"];
+    let NuevaFechaParse = NuevaFecha[6].value + "" + NuevaFecha[4].value + "" + NuevaFecha[2].value;
     return NuevaFechaParse;
 }
 

@@ -15,6 +15,7 @@ Con [CronJobs](https://www.npmjs.com/package/node-schedule) se migran los datos 
 *Parámetros validados en el Front-end
  
  Si el cliente cumple con es los anteriores parámetros, el sistema le permite generar la solicitud de crédito con los datos obligatorios para acceder a la renovación de su crédito, si no pasa esos parámetros, no se puede generar la solicitud de crédito.
+ 
 ![Mysql](https://github.com/gabrielmares/semaforo_backend/blob/main/ejemplos/DB.JPG)
 
 ![Node](https://github.com/gabrielmares/semaforo_backend/blob/main/ejemplos/syncDB.JPG)

@@ -4,3 +4,4 @@ src/cert
 src/mysql.js
 src/firebird.js
 src/firebird.js
+dist

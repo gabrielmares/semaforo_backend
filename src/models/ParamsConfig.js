@@ -9,11 +9,11 @@ let Configuration = sequelizePool.define('configuration', {
     timestamps: false
 })
 
-// try {
-//     Configuration.sync({ alter: true, force: true }).then(() => console.log('tabla de configuracion actualizada'));
-// } catch (error) {
-//     throw error
+try {
+    Configuration.sync();
+} catch (error) {
+    throw error
 
-// }
+}
 
 module.exports = Configuration;

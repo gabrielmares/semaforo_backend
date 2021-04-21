@@ -1,4 +1,8 @@
 let pool = require('./firebird');
+/*
+funcion que recibe los parametros para crear consultas a Firebird
+la libreria funciona con promesas desde que abre la conexion hasta que recibe el resultado
+*/
 
 function promesa(query, values) {
     let info;
@@ -6,12 +10,10 @@ function promesa(query, values) {
         info = new Promise((resolve, reject) => {
             pool.get(function (err, db) {
                 if (err) {
-                    return err;
+                    throw err;
                 }
-                db.query(query, values, function (err, row) {
-                    if (err) {
-                        reject(err)
-                    }
+                db.query(query, values, function (err, row) {                   
+                    if (err) throw reject(err)
                     db.detach();
                     if (row.length > 1) {
                         resolve(row);
@@ -21,7 +23,6 @@ function promesa(query, values) {
             })
         })
         return info
-
     } catch (error) {
         return error
     }

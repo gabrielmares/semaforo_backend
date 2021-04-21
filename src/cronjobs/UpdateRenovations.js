@@ -1,13 +1,19 @@
 let job = require('node-schedule');
 let { Inputdate } = require('../helpers/fechas');
 const { Renovations } = require('../models');
-// const firebirdPool = require('../firebird');
 const { promesa } = require('../querys');
 const { Op } = require('sequelize')
 const { CambiarFecha, sumaFechas } = require('../helpers/fechas');
+/**
+ * 
+ * @param {*Fecha del dia que se realiza la consulta a la BD} hoy 
+ * @param {*fecha inicial del periodo a buscar en BD} ultimo 
+ * @param {*fecha de final para rango de importacion} hasta 
+ * @returns array de clientes que seran evaluados para solicitudes de creditos desde MySQL
+ * la mayoria de query fue capturado con watch dog desde la aplicacion original
+ */
 
 
-// query a ejecutar en Firebird para importar datos a Mysql
 let find = (hoy, ultimo, hasta) => {
     return `SELECT su.NOMBRE as Sucursal, c.FINNOSUCURSAL, C.CODIGO,  c.NOMBRE, a.CENTRO, a.GRUPO, a.NOCONTRATO as Contrato, a.MONTOSOL as Credito, s.FECVTO as Vencimiento, sal.saldo, sal.sdocapital, sal.ultimo, ((a.MONTOSOL - sal.sdocapital)/(a.MONTOSOL))*100 as PorcPagado
 FROM FSOCR_SOLICITUDES a  join CCSDO_SALDOS s on a.NOCONTRATO=s.FACTURA and a.NOPAGOS=s.PLAZO and a.STATUS=2 and (a.MORA is null)
@@ -46,6 +52,12 @@ order by su.NOMBRE, a.CENTRO, s.FECVTO`
 };
 
 
+/**
+ * 
+ * @param {* modelo de la BD donde se registraran los datos} Renovations 
+ * @param {* Registro a crear, si existe y el saldo del cliente es el mismo, se omiten cambios, si no se actualiza el saldo o se crea el nuevo registro} row 
+ */
+
 async function merge(Renovations, row) {
 
     await Renovations
@@ -58,11 +70,7 @@ async function merge(Renovations, row) {
         })
         .then(async (exist) => {
             if (exist[0]) {
-                if (parseInt(row.SALDO) === parseInt(exist[0].dataValues.SALDO)) {
-                    console.log('nada que modificar en el contrato ', row.CONTRATO);
-                    return false;
-                }
-                console.log('actualizando contrato', row.CONTRATO)
+                if (parseInt(row.SALDO) === parseInt(exist[0].dataValues.SALDO)) return 
                 return await Renovations.update({
                     PorPagado: parseInt(row.PORCPAGADO),
                     SALDO: parseFloat(row.SALDO).toFixed(3),
@@ -75,7 +83,6 @@ async function merge(Renovations, row) {
                     }
                 })
             }
-            console.log('creando registro en mysql', row.CONTRATO)
             return await Renovations.create({
                 ...row,
                 PORPAGADO: parseFloat(row.PORCPAGADO),
@@ -95,11 +102,9 @@ let update = () => promesa(
         CambiarFecha(sumaFechas(new Date(), -15)),
         CambiarFecha(sumaFechas(new Date(), 15))
     )).then(rows => {
-        console.log('numero registros encontrados', rows.length)
         rows.map(row => {
             return merge(Renovations, row)
         })
     })
-
 
 module.exports = update;

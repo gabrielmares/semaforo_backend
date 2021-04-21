@@ -3,7 +3,7 @@ let passport = require('passport');
 
 let signin = async (req, res) => {
     await passport.authenticate('signin', (err, user, info) => {
-        if (err) return err;
+        if (err) throw err;
         if (!user) {
             return res.json({
                 info,

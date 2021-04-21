@@ -5,12 +5,12 @@ const isAdmin = require('../helpers/adminRequest')
 
 
 // endpoint de registro de usuarios
-router.post('/signup', signup)
+router.post('/signup', isAdmin,  signup)
 // endpont para iniciar sesion de usuarios
 router.post('/signin', signin)
 
 // endpoint para recuperar la informacion del usuario actual en la sesion
-// si el token esta vencido, se le reenvia a 
+// si el token esta vencido, se le reenvia a iniciar sesion
 router.get('/currentuser', currentUser)
 
 // borramos el token del usuario en el cliente

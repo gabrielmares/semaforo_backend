@@ -48,11 +48,10 @@ const Renovations = sequelizePool.define('renovation', {
     timestamps: false
 });
 
-// try {
-//     Renovations.sync({ alter: true, force: true })
-//     console.log('Tabla solicitudes modificada')
-// } catch (error) {
-//     console.log(error);
-// }
+try {
+    Renovations.sync()
+} catch (error) {
+    throw error
+}
 
 module.exports = Renovations;

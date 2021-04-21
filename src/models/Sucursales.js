@@ -3,8 +3,7 @@ const sequelizePool = require('./pool');
 
 const Sucursales = sequelizePool.define('sucursales', {
     id: {
-        type: DataTypes.NUMBER,
-        allowNull: false,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
@@ -16,12 +15,11 @@ const Sucursales = sequelizePool.define('sucursales', {
     timestamps: false
 })
 
-// try {
-//     Sucursales.sync({ alter: true, force: true });
-//     console.log('tabla de sucursales actualizada')
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    Sucursales.sync();
+} catch (error) {
+    throw error
+}
 
 
 module.exports = Sucursales;

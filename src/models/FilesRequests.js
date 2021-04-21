@@ -19,10 +19,10 @@ const FilesRequests = sequelizePool.define('filesRequests', {
     timestamps: false
 })
 
-// try {
-//     FilesRequests.sync({ alter: true, force: true }).then(() => console.log('tabla de documentacion de solicitudes, creada'));
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    FilesRequests.sync();
+} catch (error) {
+    throw error
+}
 
 module.exports = FilesRequests

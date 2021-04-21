@@ -49,13 +49,12 @@ const RequestModel = sequelizePool.define('request', {
     timestamps: false
 })
 
-// try {
-//     RequestModel.sync({ alter: true, force: true }).then(() => console.log('tabla de solicitudes creada'))
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    RequestModel.sync()
+} catch (error) {
+   throw error
+}
 
 
-// solno, solfecha, nosucursal, cliente, centro, grupo, plazo, montosol, status, promotor, solicitud, comprobante, fecdesembolso, INE, AVISO,
 
 module.exports = RequestModel

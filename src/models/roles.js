@@ -17,11 +17,11 @@ const rolUsers = sequelizePool.define('rolUser', {
     timestamps: false
 });
 
-// try {
-//     rolUsers.sync({ alter: true });
-//     return console.log('creando modelo de roles de usuarios ');
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    rolUsers.sync();
+   
+} catch (error) {
+    throw error
+}
 
 module.exports = rolUsers;

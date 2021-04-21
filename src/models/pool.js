@@ -13,4 +13,6 @@ let sequelizePool = new Sequelize(
 });
 
 
+
+
 module.exports = sequelizePool;

@@ -9,6 +9,7 @@ const Promotor = sequelizePool.define('promotores', {
     },
     sucursal: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
             model: Sucursales,
             key: 'id'
@@ -22,11 +23,11 @@ const Promotor = sequelizePool.define('promotores', {
     timestamps: false
 });
 
-// try {
-//     Promotor.sync({ alter: true, force: true }).then(() => console.log('tabla de promotores creada'))
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    Promotor.sync()
+} catch (error) {
+    console.log(error)
+}
 
 
 module.exports = Promotor;

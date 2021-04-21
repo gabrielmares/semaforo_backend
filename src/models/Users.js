@@ -52,12 +52,11 @@ const UserModel = sequelizePool.define('user', {
 
 
 
-// try {
-//     UserModel.sync({ alter: true, force: true });
-//     console.log('Tabla Usuarios modificada')
-// } catch (error) {
-//     console.log(error)
-// }
+try {
+    UserModel.sync();
+} catch (error) {
+    throw error
+}
 
 
 

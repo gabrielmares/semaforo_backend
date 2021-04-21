@@ -3,7 +3,6 @@ const { Op } = require('sequelize');
 
 const Requests = async (req, res) => {
     let { FINNOSUCURSAL, DESDE, HASTA, CENTRO } = req.query;
-    console.log(FINNOSUCURSAL, CENTRO, DESDE, HASTA)
     if (parseInt(CENTRO) > 0) {
         try {
             RequestsInProcess.findAll({

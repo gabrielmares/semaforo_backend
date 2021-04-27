@@ -1,9 +1,14 @@
 const jwt = require('jsonwebtoken');
 let passport = require('passport');
+const { JWTSECRET } = require('../../enviroment')
 
 let signin = async (req, res) => {
     await passport.authenticate('signin', (err, user, info) => {
-        if (err) throw err;
+        if (err === 501) return res.json({
+            codigo: 501,
+            info
+        })
+
         if (!user) {
             return res.json({
                 info,
@@ -21,7 +26,7 @@ let signin = async (req, res) => {
 
         }
         // se firma el token del sesion
-        let token = jwt.sign(payload, process.env.JWTSECRET, { algorithm: 'HS256' })
+        let token = jwt.sign(payload, process.env.JWTSECRET || JWTSECRET, { algorithm: 'HS256' })
         res.cookie('TokenID', `${token}`, { httpOnly: true, signed: true })
         return res.json({
             info: true,

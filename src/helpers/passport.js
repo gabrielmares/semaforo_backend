@@ -17,12 +17,12 @@ passport.use('signin',
                     }
                 }).then(user => {
                     if (!user) {
-                        return done(403, false, { message: ' no se encontro el usuario' })
+                        return done(501, false, { message: ' no se encontro el usuario' })
                     }
                     bcrypt.compare(password, user.password)
                         .then(result => {
                             if (!result) {
-                                return done(null, false, { message: 'Contraseña no valida' });
+                                return done(500, false, { message: 'Contraseña no valida' });
                             }
                             return done(null, user, { message: 'Bienvenido' }) //usuario autenticado
                         })

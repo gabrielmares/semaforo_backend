@@ -26,7 +26,7 @@ const Promotor = sequelizePool.define('promotores', {
 try {
     Promotor.sync()
 } catch (error) {
-    console.log(error)
+    throw error
 }
 
 

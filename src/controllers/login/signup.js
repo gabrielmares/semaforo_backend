@@ -1,6 +1,7 @@
 let User = require('../../models').UserModel;
 let bcrypt = require('bcryptjs');
-let uuid = require('uuid')
+let uuid = require('uuid');
+const { SALT_ROUNDS } = require('../../enviroment')
 
 
 let signup = async (req, res) => {
@@ -17,7 +18,7 @@ let signup = async (req, res) => {
             }
             return await User.create({
                 email,
-                password: await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS)),
+                password: await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS || SALT_ROUNDS)),
                 rol: parseInt(rol),
                 nombre,
                 sucursal,
@@ -26,7 +27,6 @@ let signup = async (req, res) => {
         })
         return res.send(userInfo.email);
     } catch (error) {
-        console.error('error: ', error)
         return res.send({
             error,
             msg: 'Ya existe un usuario con este Email'

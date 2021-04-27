@@ -1,15 +1,14 @@
 const { Sequelize } = require('sequelize');
-const pool = require('../mysql');
-require('dotenv').config();
+const { mysqlOptions } = require('../enviroment')
 
 
 let sequelizePool = new Sequelize(
-    process.env.DBMYSQL,
-    process.env.USERMYSQL,
-    process.env.PASSWORDMYSQL, {
+    DBMYSQL = process.env.DBMYSQL || mysqlOptions.DBMYSQL,
+    USERMYSQL = process.env.USERMYSQL || mysqlOptions.USERMYSQL,
+    PASSWORDMYSQL = process.env.PASSWORDMYSQL || mysqlOptions.PASSWORDMYSQL, {
     dialect: "mysql",
-    port: process.env.PORTMYSQL,
-    host: process.env.HOSTMYSQL,
+    port: process.env.PORTMYSQL || mysqlOptions.PORTMYSQL,
+    host: process.env.HOSTMYSQL || mysqlOptions.HOSTMYSQL,
 });
 
 

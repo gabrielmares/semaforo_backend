@@ -1,11 +1,12 @@
 let jwt = require('jsonwebtoken');
 let User = require('../../models').UserModel;
+const { JWTSECRET } = require('../../enviroment')
 
 
 let currentUser = (req, res) => {
     if (req.signedCookies.TokenID) {
         let token = req.signedCookies.TokenID
-        jwt.verify(token, process.env.JWTSECRET, (err, info) => {
+        jwt.verify(token, process.env.JWTSECRET || JWTSECRET, (err, info) => {
             if (err || info.exp < Date.now()) {
                 // si el token esta vencido, limpiamos Cookie de sesion para
                 // que el usuario vuelva a iniciar sesion

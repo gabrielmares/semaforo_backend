@@ -6,11 +6,10 @@ const cors = require('cors');
 const models = require('./models');
 const passport = require('passport');
 const update = require('./cronjobs');
+const { SECRETCOOKIES, PORT } = require('./enviroment')
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-// const generateDoc = require('./helpers/constancias');
-require('dotenv').config();
 require('./helpers/passport');
 
 
@@ -21,11 +20,11 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 })
-app.use(cookieParser(process.env.SECRETCOOKIES));
+app.use(cookieParser(process.env.SECRETCOOKIES || SECRETCOOKIES));
 app.use(helmet());
 app.use(passport.initialize());
-const port = process.env.PORT || 81;
-app.set('port', process.env.PORT || port);
+const port = process.env.PORT || PORT;
+app.set('port', port);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({ origin: true }));

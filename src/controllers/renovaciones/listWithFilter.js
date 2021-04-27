@@ -3,52 +3,25 @@ const { Op } = require('sequelize');
 
 const list = async (req, res) => {
     let { CENTRO, FINNOSUCURSAL, DESDE, HASTA } = req.query;
-    let rows = {};
-    if (parseInt(CENTRO) > 0) {
-        try {
-            // filtra registros por centros de operacion
-            rows = await Renovations
-                .findAll({
-                    where: {
-                        FINNOSUCURSAL: parseInt(FINNOSUCURSAL),
-                        CENTRO: parseInt(CENTRO),
-                        VENCIMIENTO: {
-                            [Op.between]: [DESDE, HASTA]
-                        }
-                    },
-                    order: [
-                        ['GRUPO', 'ASC']
-                    ]
-                })
-            return res.send(rows)
-        } catch (error) {
-            return res.send(304)
-
-        }
-    }
-
+    let rows = [];
     try {
-        // buscando registros con la condicion minina, opcion utilizada para altos rangos de la empresa
         rows = await Renovations
             .findAll({
                 where: {
-                    FINNOSUCURSAL: parseInt(FINNOSUCURSAL),
-                    CENTRO: {
-                        [Op.gt]: 0
-                    },
+                    FINNOSUCURSAL: (parseInt(FINNOSUCURSAL) === 0) ? ({ [Op.gt]: 0 }) : parseInt(FINNOSUCURSAL),
+                    CENTRO: (parseInt(CENTRO) > 0 && parseInt(FINNOSUCURSAL) > 0) ? ({ [Op.eq]: parseInt(CENTRO) }) : ({ [Op.gt]: 0 }),
                     VENCIMIENTO: {
                         [Op.between]: [DESDE, HASTA]
-
                     }
-
-                }, order: [
-                    ['CENTRO', 'ASC'],
+                },
+                order: [
                     ['GRUPO', 'ASC']
                 ]
             })
         return res.send(rows)
     } catch (error) {
         return res.send(304)
+
     }
 }
 

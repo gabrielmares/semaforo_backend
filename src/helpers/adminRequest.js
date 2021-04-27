@@ -1,10 +1,11 @@
 let jwt = require('jsonwebtoken');
 let { UserModel } = require('../models')
+let { JWTSECRET } = require('../enviroment')
 
 const isAdmin = (req, res, next) => {
     if (req.signedCookies.TokenID) {
         let token = req.signedCookies.TokenID
-        jwt.verify(token, process.env.JWTSECRET, (err, data) => {
+        jwt.verify(token, process.env.JWTSECRET || JWTSECRET, (err, data) => {
             if (err || data.exp < Date.now()) {
                 return res.json({
                     codigo: 403,

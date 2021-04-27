@@ -52,7 +52,7 @@ const RequestModel = sequelizePool.define('request', {
 try {
     RequestModel.sync()
 } catch (error) {
-   throw error
+    throw error
 }
 
 
